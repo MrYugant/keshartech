@@ -1,0 +1,16 @@
+import type { MetadataRoute } from "next";
+import { siteConfig } from "@/config/site";
+import { brand } from "@/config/theme";
+
+export default function manifest(): MetadataRoute.Manifest {
+  return {
+    name: siteConfig.name,
+    short_name: siteConfig.name,
+    description: siteConfig.shortDescription,
+    start_url: "/",
+    display: "standalone",
+    background_color: brand.white,
+    theme_color: brand.orange,
+    icons: [{ src: "/icon.svg", sizes: "any", type: "image/svg+xml" }],
+  };
+}

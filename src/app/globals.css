@@ -1,0 +1,376 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ------------------------------------------------------------------ */
+/*  1. Brand palette — the only place raw colour values are declared  */
+/* ------------------------------------------------------------------ */
+:root {
+  --kt-orange: #ff6600;
+  --kt-navy: #002d62;
+  --kt-black: #0c0c0c;
+  --kt-charcoal: #141414;
+  --kt-white: #ffffff;
+  --kt-off-white: #f5f5f2;
+  --kt-cool-grey: #f7f8fa;
+  --kt-ink: #111111;
+  --kt-paper: #f5f7fa;
+  --kt-muted: #aab4be;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --header-h: 4.5rem;
+}
+
+/* ------------------------------------------------------------------ */
+/*  2. Semantic tokens — light (default)                              */
+/* ------------------------------------------------------------------ */
+:root {
+  color-scheme: light;
+  --bg: var(--kt-white);
+  --bg-muted: var(--kt-off-white);
+  --bg-alt: var(--kt-cool-grey);
+  --surface: var(--kt-white);
+  --surface-raised: var(--kt-white);
+  --fg: var(--kt-ink);
+  --fg-muted: color-mix(in oklab, var(--kt-ink) 68%, var(--kt-white));
+  --fg-subtle: color-mix(in oklab, var(--kt-ink) 56%, var(--kt-white));
+  --line: color-mix(in oklab, var(--kt-ink) 10%, transparent);
+  --line-strong: color-mix(in oklab, var(--kt-ink) 18%, transparent);
+  --accent: var(--kt-orange);
+  --accent-fg: var(--kt-ink);
+  /* Orange darkened toward ink so accent text meets contrast on light backgrounds */
+  --accent-text: color-mix(in oklab, var(--kt-orange) 88%, var(--kt-ink));
+  --accent-soft: color-mix(in oklab, var(--kt-orange) 10%, transparent);
+  --brand-2: var(--kt-navy);
+  --brand-2-soft: color-mix(in oklab, var(--kt-navy) 8%, transparent);
+  --inverse-bg: var(--kt-ink);
+  --inverse-fg: var(--kt-white);
+  --shadow-color: color-mix(in oklab, var(--kt-navy) 14%, transparent);
+  --glow: color-mix(in oklab, var(--kt-orange) 22%, transparent);
+}
+
+/* Dark theme, and "always dark" sections inside the light theme */
+.dark,
+.tone-dark {
+  color-scheme: dark;
+  --bg: var(--kt-black);
+  --bg-muted: var(--kt-charcoal);
+  --bg-alt: var(--kt-charcoal);
+  --surface: var(--kt-charcoal);
+  --surface-raised: color-mix(in oklab, var(--kt-charcoal) 88%, var(--kt-paper));
+  --fg: var(--kt-paper);
+  --fg-muted: var(--kt-muted);
+  --fg-subtle: color-mix(in oklab, var(--kt-muted) 80%, var(--kt-black));
+  --line: color-mix(in oklab, var(--kt-paper) 10%, transparent);
+  --line-strong: color-mix(in oklab, var(--kt-paper) 18%, transparent);
+  --accent-text: var(--kt-orange);
+  --accent-soft: color-mix(in oklab, var(--kt-orange) 14%, transparent);
+  --brand-2: color-mix(in oklab, var(--kt-navy) 45%, var(--kt-paper));
+  --brand-2-soft: color-mix(in oklab, var(--kt-navy) 40%, transparent);
+  --inverse-bg: var(--kt-paper);
+  --inverse-fg: var(--kt-ink);
+  --shadow-color: color-mix(in oklab, var(--kt-black) 60%, transparent);
+  --glow: color-mix(in oklab, var(--kt-orange) 28%, transparent);
+}
+
+/* In dark mode, dark sections step up to charcoal so they still read as distinct */
+.dark .tone-dark {
+  --bg: var(--kt-charcoal);
+  --surface: color-mix(in oklab, var(--kt-charcoal) 85%, var(--kt-paper));
+}
+
+/* ------------------------------------------------------------------ */
+/*  3. Tailwind theme bridge                                           */
+/* ------------------------------------------------------------------ */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-muted: var(--bg-muted);
+  --color-bg-alt: var(--bg-alt);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-subtle: var(--fg-subtle);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-accent: var(--accent);
+  --color-accent-fg: var(--accent-fg);
+  --color-accent-text: var(--accent-text);
+  --color-accent-soft: var(--accent-soft);
+  --color-brand-2: var(--brand-2);
+  --color-brand-2-soft: var(--brand-2-soft);
+  --color-inverse: var(--inverse-bg);
+  --color-inverse-fg: var(--inverse-fg);
+  --color-orange: var(--kt-orange);
+  --color-navy: var(--kt-navy);
+
+  --font-sans: var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-bricolage), var(--font-instrument), ui-sans-serif, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+
+  --radius-card: 1.5rem;
+  --radius-panel: 2rem;
+
+  --ease-out-expo: var(--ease-out);
+  --breakpoint-3xl: 1920px;
+}
+
+/* ------------------------------------------------------------------ */
+/*  4. Fluid type & layout utilities                                   */
+/* ------------------------------------------------------------------ */
+@utility text-display {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 1.1rem + 8.4vw, 10.5rem);
+  line-height: 0.9;
+  letter-spacing: -0.025em;
+  font-weight: 700;
+}
+@utility text-h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 1.2rem + 5vw, 6rem);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+  font-weight: 650;
+}
+@utility text-h2 {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 1.1rem + 3.4vw, 4.25rem);
+  line-height: 1.02;
+  letter-spacing: -0.015em;
+  font-weight: 650;
+}
+@utility text-h3 {
+  font-family: var(--font-display);
+  font-size: clamp(1.375rem, 1.1rem + 1vw, 2rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+}
+@utility text-lead {
+  font-size: clamp(1.0625rem, 0.95rem + 0.45vw, 1.375rem);
+  line-height: 1.55;
+  letter-spacing: -0.01em;
+}
+@utility text-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+@utility shell {
+  width: 100%;
+  max-width: 1440px;
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 4vw, 3.5rem);
+}
+@utility section-y {
+  padding-block: clamp(5rem, 3rem + 7vw, 10rem);
+}
+@utility bg-grid {
+  background-image:
+    linear-gradient(to right, var(--line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--line) 1px, transparent 1px);
+  background-size: 72px 72px;
+}
+
+/* ------------------------------------------------------------------ */
+/*  5. Base                                                            */
+/* ------------------------------------------------------------------ */
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    scroll-padding-top: calc(var(--header-h) + 1rem);
+  }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: clip;
+  }
+  .tone-dark {
+    background-color: var(--bg);
+    color: var(--fg);
+  }
+  ::selection {
+    background: var(--kt-orange);
+    color: var(--kt-ink);
+  }
+  :focus-visible {
+    outline: 2px solid var(--kt-orange);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  /* Smooth theme switch without animating everything on first paint */
+  html.theme-transition,
+  html.theme-transition *,
+  html.theme-transition *::before,
+  html.theme-transition *::after {
+    transition: background-color 0.4s var(--ease-out), border-color 0.4s var(--ease-out), color 0.4s var(--ease-out) !important;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/*  6. Motion primitives (CSS-first, JS only toggles a class)          */
+/* ------------------------------------------------------------------ */
+@keyframes kt-rise {
+  from { transform: translate3d(0, 110%, 0); }
+  to { transform: translate3d(0, 0, 0); }
+}
+@keyframes kt-fade-up {
+  from { opacity: 0; transform: translate3d(0, 18px, 0); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes kt-page-in {
+  from { opacity: 0; transform: translate3d(0, 10px, 0); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes kt-marquee {
+  to { transform: translate3d(-50%, 0, 0); }
+}
+@keyframes kt-pulse-block {
+  0%, 100% { opacity: 0.12; transform: scale(0.82); }
+  45% { opacity: 1; transform: scale(1); }
+}
+@keyframes kt-float {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -10px, 0); }
+}
+@keyframes kt-draw {
+  from { stroke-dashoffset: var(--len, 1200); }
+  to { stroke-dashoffset: 0; }
+}
+@keyframes kt-spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes kt-glow {
+  0%, 100% { opacity: 0.55; transform: translate3d(-50%, 0, 0) scale(1); }
+  50% { opacity: 0.85; transform: translate3d(-50%, -2%, 0) scale(1.06); }
+}
+
+.page-enter {
+  animation: kt-page-in 0.7s var(--ease-out) both;
+}
+
+/* Headline line mask: each word rises from behind its line */
+.line-mask {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.06em;
+  margin-bottom: -0.06em;
+}
+.word-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  padding-bottom: 0.1em;
+  margin-bottom: -0.1em;
+}
+.line-mask > span,
+.word-mask > span {
+  display: inline-block;
+  animation: kt-rise 1.1s var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 110ms + 120ms);
+}
+.fade-up {
+  animation: kt-fade-up 0.9s var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 90ms + 500ms);
+}
+
+/* Scroll reveals — only hidden once JS has confirmed it can reveal them */
+.js [data-reveal] {
+  transition:
+    opacity 0.9s var(--ease-out),
+    transform 1s var(--ease-out),
+    clip-path 1.2s var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 85ms);
+}
+.js [data-reveal]:not(.is-visible) {
+  opacity: 0;
+  transform: translate3d(0, 32px, 0);
+}
+.js [data-reveal="fade"]:not(.is-visible) {
+  transform: none;
+}
+.js [data-reveal="scale"]:not(.is-visible) {
+  transform: scale(0.96);
+}
+.js [data-reveal="mask"] {
+  opacity: 1;
+}
+.js [data-reveal="mask"]:not(.is-visible) {
+  opacity: 1;
+  transform: scale(1.04);
+  clip-path: inset(18% 8% 18% 8% round 2rem);
+}
+.js [data-reveal="mask"].is-visible {
+  clip-path: inset(0 0 0 0 round 0);
+}
+
+.marquee-track {
+  animation: kt-marquee var(--duration, 40s) linear infinite;
+}
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+/* Pointer-following highlight for interactive cards */
+.spotlight {
+  position: relative;
+  isolation: isolate;
+}
+.spotlight::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 0%), var(--glow), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.5s var(--ease-out);
+  pointer-events: none;
+}
+.spotlight:hover::before {
+  opacity: 1;
+}
+
+/* Native <details> accordion with animated content */
+.faq-item::details-content {
+  block-size: 0;
+  overflow: hidden;
+  transition: block-size 0.45s var(--ease-out), content-visibility 0.45s allow-discrete;
+}
+.faq-item[open]::details-content {
+  block-size: auto;
+}
+.faq-item summary::-webkit-details-marker {
+  display: none;
+}
+@supports (interpolate-size: allow-keywords) {
+  :root { interpolate-size: allow-keywords; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .js [data-reveal]:not(.is-visible) {
+    opacity: 1;
+    transform: none;
+    clip-path: none;
+  }
+}
